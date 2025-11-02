@@ -5,57 +5,57 @@
 ‎module.exports.config = {
 ‎    name: "bby",
 ‎    aliases: ["baby", "bbe", "babe"],
-‎    version: "7.0.0",
-‎    author: "dipto + Maya Optimized 😎",
+‎    version: "7.1.0",
+‎    author: "dipto + Maya ❤️",
 ‎    countDown: 0,
 ‎    role: 0,
-‎    description: "Better than sim simi — optimized ❤️",
+‎    description: "Better than sim simi — ultra optimized 😌",
 ‎    category: "chat",
 ‎    guide: {
 ‎        en: "{pn} [message]\nteach [msg] - [reply1, reply2]\nremove [msg]\nrm [msg] - [index]\nmsg [msg]\nlist / list all\nedit [msg] - [new]"
 ‎    }
 ‎};
 ‎
-‎const send = (api, thread, msg, replyID) => api.sendMessage(msg, thread, replyID);
-‎
-‎async function request(url) {
-‎    try { 
-‎        return (await axios.get(url)).data; 
-‎    } catch { 
-‎        return { message: "⚠️ Server busy, try again" }; 
+‎const send = (api, t, m, r) => api.sendMessage(m, t, r);
+‎const fetch = async (url) => {
+‎    try {
+‎        const { data } = await axios.get(url);
+‎        return data;
+‎    } catch {
+‎        return { message: "⚠️ Server Busy / API Offline" };
 ‎    }
-‎}
+‎};
 ‎
 ‎module.exports.onStart = async ({ api, event, args, usersData }) => {
-‎    const input = args.join(" ").toLowerCase();
+‎    const text = args.join(" ").toLowerCase();
 ‎    const uid = event.senderID;
 ‎    const link = await baseApiUrl();
 ‎
-‎    if (!args[0])
-‎        return send(api, event.threadID, 
-‎            ["Bolo baby 💗", "Hmm? 👀", "Type help baby 🙈", "Try: !baby hi ✨"]
-‎            [Math.floor(Math.random()*4)], event.messageID);
+‎    if (!args[0]) {
+‎        const replies = ["Bolo baby 💗", "Hmm? 👀", "Type help baby 🙈", "Try: !baby hi ✨"];
+‎        return send(api, event.threadID, replies[Math.random() * replies.length | 0], event.messageID);
+‎    }
 ‎
-‎    // remove msg
+‎    // remove
 ‎    if (args[0] === "remove") {
-‎        const key = input.replace("remove ", "");
-‎        const res = await request(`${link}?remove=${key}&senderID=${uid}`);
+‎        const key = text.slice(7).trim();
+‎        const res = await fetch(`${link}?remove=${key}&senderID=${uid}`);
 ‎        return send(api, event.threadID, res.message, event.messageID);
 ‎    }
 ‎
-‎    // remove index
-‎    if (args[0] === "rm" && input.includes("-")) {
-‎        const [msg, index] = input.replace("rm ", "").split(" - ");
-‎        const res = await request(`${link}?remove=${msg}&index=${index}`);
+‎    // rm index
+‎    if (args[0] === "rm" && text.includes("-")) {
+‎        const [msg, index] = text.slice(3).split(" - ");
+‎        const res = await fetch(`${link}?remove=${msg}&index=${index}`);
 ‎        return send(api, event.threadID, res.message, event.messageID);
 ‎    }
 ‎
-‎    // teacher list
+‎    // list
 ‎    if (args[0] === "list") {
 ‎        const all = args[1] === "all";
-‎        const data = await request(`${link}?list=all`);
+‎        const data = await fetch(`${link}?list=all`);
 ‎
-‎        if (!all) return send(api, event.threadID, `Total Teach = ${data.length}`, event.messageID);
+‎        if (!all) return send(api, event.threadID, `Total Teach = ${data?.length || 0}`, event.messageID);
 ‎
 ‎        const teachers = await Promise.all(
 ‎            data.teacher.teacherList.map(async (i) => {
@@ -68,52 +68,48 @@
 ‎        teachers.sort((a, b) => b.count - a.count);
 ‎        const list = teachers.map((t, x) => `${x + 1}/ ${t.name}: ${t.count}`).join("\n");
 ‎
-‎        return send(api, event.threadID, `👑 Teachers: \n${list}`, event.messageID);
+‎        return send(api, event.threadID, `👑 Teachers:\n${list}`, event.messageID);
 ‎    }
 ‎
-‎    // show replies list
+‎    // msg list
 ‎    if (args[0] === "msg") {
-‎        const key = input.replace("msg ", "");
-‎        const res = await request(`${link}?list=${key}`);
+‎        const key = text.slice(4);
+‎        const res = await fetch(`${link}?list=${key}`);
 ‎        return send(api, event.threadID, `Message "${key}": ${res?.data}`, event.messageID);
 ‎    }
 ‎
 ‎    // edit reply
 ‎    if (args[0] === "edit") {
-‎        const [oldMsg, newMsg] = input.replace("edit ", "").split(" - ");
+‎        const [oldMsg, newMsg] = text.slice(5).split(" - ");
 ‎        if (!newMsg) return send(api, event.threadID, "❌ Format: edit old - new", event.messageID);
 ‎
-‎        const res = await request(`${link}?edit=${oldMsg}&replace=${newMsg}&senderID=${uid}`);
+‎        const res = await fetch(`${link}?edit=${oldMsg}&replace=${newMsg}&senderID=${uid}`);
 ‎        return send(api, event.threadID, `✅ Updated: ${res.message}`, event.messageID);
 ‎    }
 ‎
-‎    // teach replies
+‎    // teach
 ‎    if (args[0] === "teach") {
-‎        let [command, reply] = input.split(" - ");
+‎        let [command, reply] = text.split(" - ");
 ‎        const msg = command.replace("teach ", "");
-‎
 ‎        if (!reply) return send(api, event.threadID, "❌ Format: teach question - reply", event.messageID);
 ‎
 ‎        let url = `${link}?teach=${msg}&reply=${reply}&senderID=${uid}`;
-‎
 ‎        if (args[1] === "react") url = `${link}?teach=${msg}&react=${reply}`;
 ‎        if (args[1] === "amar") url += "&key=intro";
 ‎
-‎        const res = await request(url);
-‎
+‎        const res = await fetch(url);
 ‎        return send(api, event.threadID, `✅ Added reply\n${res.message}`, event.messageID);
 ‎    }
 ‎
 ‎    // name question
-‎    if (["amar name ki", "amr nam ki", "whats my name"].some(p => input.includes(p))) {
-‎        const res = await request(`${link}?text=amar name ki&senderID=${uid}&key=intro`);
+‎    if (["amar name ki", "amr nam ki", "whats my name"].some(p => text.includes(p))) {
+‎        const res = await fetch(`${link}?text=amar name ki&senderID=${uid}&key=intro`);
 ‎        return send(api, event.threadID, res.reply, event.messageID);
 ‎    }
 ‎
-‎    // default chat AI
-‎    const res = await request(`${link}?text=${encodeURIComponent(input)}&senderID=${uid}&font=1`);
-‎
-‎    api.sendMessage(res.reply, event.threadID, (_, info) => {
+‎    // normal chat
+‎    const res = await fetch(`${link}?text=${encodeURIComponent(text)}&senderID=${uid}&font=1`);
+‎    api.sendMessage(res.reply || "🥺💔", event.threadID, (_, info) => {
 ‎        global.GoatBot.onReply.set(info.messageID, {
 ‎            commandName: module.exports.config.name,
 ‎            type: "reply",
@@ -123,12 +119,11 @@
 ‎};
 ‎
 ‎module.exports.onReply = async ({ api, event }) => {
-‎    const text = encodeURIComponent(event.body?.toLowerCase());
+‎    const txt = encodeURIComponent(event.body?.toLowerCase());
 ‎    const uid = event.senderID;
 ‎    const link = await baseApiUrl();
 ‎
-‎    const res = await request(`${link}?text=${text}&senderID=${uid}&font=1`);
-‎
+‎    const res = await fetch(`${link}?text=${txt}&senderID=${uid}&font=1`);
 ‎    api.sendMessage(res.reply, event.threadID, (_, info) => {
 ‎        global.GoatBot.onReply.set(info.messageID, {
 ‎            commandName: module.exports.config.name,
@@ -150,16 +145,19 @@
 ‎
 ‎    const preset = [
 ‎        `Can I help you? 😒🌷`,
-‎        `আমাকে না ডেকে আমার বস সজিব কে ডাক 😇🫦`,
+‎        `আমাকে না ডেকে বস সজিব কে ডাক 😇🫦`,
 ‎        `আমি ব্যস্ত আছি 🙈`,
 ‎        `তুমি কি WiFi নাকি? দেখলেই connect 😌`,
 ‎        `এখন mood off 💗`,
-‎        `তুমি নাকি আমার boss 𝗦𝗢𝗝𝗜𝗕 এর বউ 😥`
+‎        `তুমি নাকি আমার boss সজিব এর বউ 😥`,
+‎        `বেশি bot bot করলে leave নিবো 😒`,
+‎        `আমি আবাল দের সাথে কথা বলি না, ok 😹`,
+‎        `এতো ডেকো না, প্রেম এ পরে যাবো 🙈`,
+‎        `${name}, তুমি কি আমাকে ভালোবাসো? 😳💋`
 ‎    ];
 ‎
-‎    if (!msg)
-‎        return send(api, event.threadID, `✨ ${name} ✨\n\n${preset[Math.random()*preset.length|0]}`, event.messageID);
+‎    if (!msg) return send(api, event.threadID, `✨ ${name} ✨\n\n${preset[Math.random()*preset.length|0]}`, event.messageID);
 ‎
-‎    const res = await request(`${await baseApiUrl()}?text=${encodeURIComponent(msg)}&senderID=${uid}&font=1`);
+‎    const res = await fetch(`${await baseApiUrl()}?text=${encodeURIComponent(msg)}&senderID=${uid}&font=1`);
 ‎    api.sendMessage(res.reply, event.threadID, event.messageID);
 ‎};
