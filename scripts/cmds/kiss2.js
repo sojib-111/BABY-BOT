@@ -1,11 +1,11 @@
-const DIG = required ("discord-image-generation");
+const DIG = require("discord-image-generation");
 const fs = require("fs-extra");
 
 
 module.exports = {
 		config: {
 				name: "kiss",
-				aliases: ["kisss","cumma"],
+				aliases: ["kiss"],
 				version: "1.0",
 				author: "NIB",
 				countDown: 5,
@@ -33,8 +33,8 @@ else if(mention.length == 1){
 }
 
 
-				const avatarURL1 = await usersData.getAvatarUrl(one);
-		const avatarURL2 = await usersData.getAvatarUrl(two);
+				const avatarURL1 = await usersData.getAvatarUrl(two);
+		const avatarURL2 = await usersData.getAvatarUrl(one);
 		const img = await new DIG.Kiss().getImage(avatarURL1, avatarURL2);
 		const pathSave = `${__dirname}/tmp/${one}_${two}kiss.png`;
 		fs.writeFileSync(pathSave, Buffer.from(img));
