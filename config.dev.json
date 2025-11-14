@@ -1,242 +1,157 @@
 {
-    "language": "en",
-    "keyActive": "",
-    "DeveloperMode": false,
-    "autoCreateDB": true,
-    "notiGroup": true,
-    "NOTIFICATION": true,
-    "allowInbox": false,
-    "autoClean": true,
-    "commandDisabled": [
-        "sim.js"
+  "facebookAccount": {
+    "email": "ahmedzayan102@gmail.com",
+    "password": "910@12340",
+    "2FASecret": "hxhjdjj",
+    "i_user": "",
+    "proxy": null,
+    "userAgent": "Mozilla/5.0 (Linux; Android 12; M2102J20SG) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.0.0 Mobile Safari/537.36",
+    "intervalGetNewCookie": 1440,
+    "notes": "time the system automatically retrieves new cookies from email/password, unit is minute, if you set null, the system will not automatically retrieve new cookies, it saves you from having to manually change your cookie every time it expires. recommended set to 1440 (1day) or 4320 (3day).TO BE ABLE TO USE THIS FEATURE YOU NEED TO ENTER THE ACCOUNT PASSWORD ABOVE"
+  },
+  "antiInbox": true,
+  "checkApproval": true,
+  "language": "en",
+  "notesLanguage": "change to your language with ISO 639-1 code, available languages: vi (Vietnamese), en (English)",
+  "nickNameBot": "◦•●♡ʏᴏᴜʀ ʙʙʏ♡●•◦",
+  "prefix": "*",
+  "adminOnly": {
+    "enable": false,
+    "ignoreCommand": []
+  },
+  "adminBot": [
+  
+    "61580864323213",
+    "",
+    "",
+    "",
+    "",
+    ""
+  ],
+  "whiteListMode": {
+    "enable": false,
+    "whiteListIds": ["61582355550594",
+"",
+      ""
     ],
-    "eventDisabled": [
-        "join.js"
-    ],
-    "EMAIL": "",
-    "PASSWORD": "",
-    "OTPKEY": "",
-    "BOTNAME": "◦•●𝗬𝗼𝘂𝗿 𝗕𝗯𝘆 [𝗕𝗼𝘁] 🖤👻●•◦",
-    "PREFIX": "*",
-    "ADMINBOT": [
-        "61580864323213",
-        "61582355550594",
-        ""
-    ],
-    "NDH": [
-        "100001039692046"
-    ],
-    "DATABASE": {
-        "sqlite": {
-            "storage": "data.sqlite"
-        }
+    "notes": "if you enable this feature, only the ids in the whiteListIds list can use the bot"
+  },
+  "whiteListModeThread": {
+    "enable": false,
+    "whiteListThreadIds": [],
+    "notes": "if you enable this feature, only the thread in the whiteListThreadIds list can use the bot",
+    "how_it_work": "if you enable both whiteListMode and whiteListModeThread, the system will check if the user is in whiteListIds, then check if the thread is in whiteListThreadIds, if one of the conditions is true, the user can use the bot"
+  },
+  "database": {
+    "type": "sqlite",
+    "uriMongodb": "",
+    "autoSyncWhenStart": false,
+    "autoRefreshThreadInfoFirstTime": true,
+    "notes": "(1) type selects 'json' or 'sqlite' or 'mongodb'. If you choose mongodb, enter uri connect mongodb in the uriMongodb section, instructions to get uri connect mongodb at: https://youtu.be/z1f9urHW5xY. I recommend using 'mongodb' or 'sqlite', json is not recommended because it is not stable. (2) when you set autoSyncWhenStart to true, the bot will automatically synchronize the data in the database when starting the bot, this will make the bot start slower. (3) when you set autoRefreshThreadInfoFirstTime to true, the bot will automatically refresh the thread information when get first message from the thread since starting the bot"
+  },
+  "timeZone": "Asia/Dhaka",
+  "credentials": {
+    "gmailAccount": {
+      "email": "messengerbot61@gamil.com",
+      "clientId": "552344212361-ujv8mjve7ue0r20t5caem9a41o8il508.apps.googleusercontent.com",
+      "clientSecret": "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",
+      "refreshToken": "1//04KHgkn8_-_PfCgYIARAAGAQSNwF-L9Iro-cV9UkOYQjg6noVALzdmrnrL8rijCPS96WGrKoflqLkXr76iZiXezLunTbJAU1AxS4",
+      "apiKey": ""
     },
-    "APPSTATEPATH": "appstate.json",
-    "FCAOption": {
-        "forceLogin": true,
-        "listenEvents": true,
-        "pauseLog": true,
-        "logLevel": "error",
-        "selfListen": false,
-        "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 15_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.1 Mobile/15E148 Safari/604.1"
+    "gRecaptcha": {
+      "siteKey": "6LcjUNYnAAAAACJRnuYb4PH2C1ZlesOimLIcziSd",
+      "secretKey": "6LcjUNYnAAAAAMWhPUFOdbhYbmeHtYoWzrH4YUDQ"
+    }
+  },
+  "dashBoard": {
+    "enable": true,
+    "expireVerifyCode": 300000,
+    "port": 9999
+  },
+  "serverUptime": {
+    "enable": false,
+    "port": 3001,
+    "socket": {
+      "enable": true,
+      "channelName": "uptime",
+      "verifyToken": ""
+    }
+  },
+  "autoRestart": {
+    "time": 172800000,
+    "notes": "you can set time is interval with milisecond or cron time, example: 1000, 10000, 60000, 3600000, 86400000, 0 0 * * *,... docs: https://www.npmjs.com/package/node-cron. If you set time is 0 or false or null, the bot will not auto restart"
+  },
+  "autoUptime": {
+    "enable": false,
+    "timeInterval": 180,
+    "url": "",
+    "notes": "the value of timeInterval is seconds, url is the url you want to send the request to (automatically detected for hosting glitch or replit)"
+  },
+  "autoLoadScripts": {
+    "enable": false,
+    "ignoreCmds": "",
+    "ignoreEvents": "",
+    "notes": "this feature will automatically load the script when scripts have been changed, you can set ignoreCmds to ignore commands, ignoreEvents to ignore events, separate by comma or space, example: \"cmd1.js cmd2.js cmd3.js\" (without backslash)"
+  },
+  "autoRefreshFbstate": true,
+  "autoReloginWhenChangeAccount": true,
+  "autoRestartWhenListenMqttError": false,
+  "restartListenMqtt": {
+    "enable": true,
+    "timeRestart": 1800000,
+    "delayAfterStopListening": 2000,
+    "logNoti": true,
+    "notes": "the value of timeRestart and delayAfterStopListening is milisecond, You shouldn't edit this if you don't know what it is"
+  },
+  "notiWhenListenMqttError": {
+    "notes": "This is the message when the bot is listening to the mqtt server and the mqtt server stops working due to account problems such as: locked acc, blocked due to spam,... bot will automatically send notifications to parts of your settings. You must change enable to true to use this feature. See bot/login/handlerWhenListenHasError.js file for details on how it works",
+    "gmail": {
+      "enable": false,
+      "emailGetNoti": "",
+      "note": "Bot will use gmailAccount to send email to emailGetNoti, can send notifications to many email, separate by comma or space, example: \"example1@gmail.com example2@gmail.com\" (without backslash)"
     },
-    "version": "1.2.14",
-    "caesar": {
-        "caeserPassword": "266303"
+    "telegram": {
+      "enable": false,
+      "botToken": "",
+      "chatId": "",
+      "note": "Can send notifications to many chatId, separate by comma or space, example: \"123456789 987654321\" (without backslash)"
     },
-    "cave": {
-        "cooldownTime": 2000000
-    },
-    "checktt": {
-        "maxColumn": 300
-    },
-    "daily": {
-        "cooldownTime": 43200000,
-        "rewardCoin": 1000
-    },
-    "diemdanh": {
-        "cooldownTime": 3000000
-    },
-    "gif": {
-        "TENOR": "73YIAOY3ACT1"
-    },
-    "instagram": {
-        "APIKEY": "81b0466275mshb5265735e50299cp1b01c5jsn3e7f93112fd3"
-    },
-    "math": {
-        "WOLFRAM": "T8J8YV-H265UQ762K"
-    },
-    "menu": {
-        "autoUnsend": true,
-        "delayUnsend": 55
-    },
-    "rankup": {
-        "autoUnsend": true,
-        "unsendMessageAfter": 10
-    },
-    "rname": {
-        "APIKEY": "mi451266190"
-    },
-    "sauce": {
-        "SAUCENAO_API": "29be078b8f5239a1202742869f92c25955bdcab3"
-    },
-    "shortlink": {
-        "bitlyAPI": "150ef1bc3af86500796d645c86f56766e4802566"
-    },
-    "soundcloud": {
-        "SOUNDCLOUD_API": "M4TSyS6eV0AcMynXkA3qQASGcOFQTWub"
-    },
-    "surprise": {
-        "log": true,
-        "out": "",
-        "kickAll": "",
-        "delThread": ""
-    },
-    "weather": {
-        "OPEN_WEATHER": "c4ef85b93982d6627681b056e24bd438"
-    },
-    "work": {
-        "cooldownTime": 1200000
-    },
-    "log": {
-        "enable": true
-    },
-    "fbcover": {
-        "APIKEY": "tdunguwu"
-    },
-    "help": {
-        "autoUnsend": true,
-        "delayUnsend": 120
-    },
-    "pokemon": {
-        "APIKEY": ""
-    },
-    "adminUpdate": {
-        "autoUnsend": true,
-        "sendNoti": true,
-        "timeToUnsend": 10
-    },
-    "sing": {
-        "API_KEY": "AIzaSyDdzsxzYZAoBCxF-TXQyVhd52_Tslu-FXU",
-        "YOUTUBE_API": "AIzaSyDdzsxzYZAoBCxF-TXQyVhd52_Tslu-FXU",
-        "SOUNDCLOUD_API": "M4TSyS6eV0AcMynXkA3qQASGcOFQTWub"
-    },
-    "tiktok": {
-        "API_KEY": "mzkFree_XNPP4LYOG9H8VY83GHG"
-    },
-    "ghép": {
-        "APIKEY": "nhatdepzaivl"
-    },
+    "discordHook": {
+      "enable": false,
+      "webhookUrl": "",
+      "note": "Can send notifications to many webhookUrl, separate by comma or space, example: \"https://discord.com/api/webhooks/123456789/123456789 https://discord.com/api/webhooks/987654321/987654321\" (without backslash)"
+    }
+  },
+  "hideNotiMessage": {
+    "commandNotFound": false,
     "adminOnly": false,
-    "cavevip": {
-        "cooldownTime": 1200000
-    },
-    "lixi": {
-        "cooldownTime": 1100000
-    },
-    "sim": {
-        "APIKEY": "Priyansh_1234567890"
-    },
-    "lamviec": {
-        "cooldownTime": 1200000
-    },
-    "xidach": {
-        "maxPlayers": 5,
-        "normalWinBonus": 1,
-        "superWinBonus": 2,
-        "epicWinBonus": 4
-    },
-    "tikvd": {
-        "API_KEY": "mzkFree_X0IFR3FV0P97U4VL83F"
-    },
-    "loto": {
-        "maxPlayers": 10,
-        "getDelay": 8
-    },
-    "ndhOnly": false,
-    "ifb": {
-        "key": "leanhtruong_w2hMntztR06Yc0L8QHGG",
-        "token": "6628568379%7Cc1e620fa708a1d5696fb991c1bde5662"
-    },
-    "adminPaOnly": false,
-    "subnautica": {
-        "APIKEY": ""
-    },
-    "shortvd": {
-        "APIKEY": "XSemUp2Zv5"
-    },
-    "subnau": {
-        "APIKEY": ""
-    },
-    "video2": {
-        "YOUTUBE_API": "AIzaSyAE4wH3OSfPUjJZTJvByQfXhEuaBMXjzAA"
-    },
-    "nganhang": {
-        "key": "DUBFREE"
-    },
-    "video": {
-        "YOUTUBE_API": "AIzaSyAE4wH3OSfPUjJZTJvByQfXhEuaBMXjzAA"
-    },
-    "music": {
-        "YOUTUBE_API": "AIzaSyAwzbcb-6QAzgZtl4qf3Z2GhQ3mqrbbMR8"
-    },
-    "mine": {
-        "APIKEY": ""
-    },
-    "youtube": {
-        "YOUTUBE_API": "AIzaSyBNqRSYmQ9D1WWIa186k8nSvo5mr2Rvk5M"
-    },
-    "ytb": {
-        "YOUTUBE_API": "AIzaSyBNqRSYmQ9D1WWIa186k8nSvo5mr2Rvk5M"
-    },
-    "voice": {
-        "zalo_apikey": "r5lKNWX89OJEJMXlUEpGEzcjByjGb2F0",
-        "fpt_apikey": "MhYPX3ksxwdqLC63LiAR4r47sOrkSdhj"
-    },
-    "anime": {
-        "cooldownTime": 1200000
-    },
-    "bannermkt": {
-        "APIKEY": "tdunguwu"
-    },
-    "radio": {
-        "YOUTUBE_API": "AIzaSyA81xmaIo6uozgapDe7_yDjFfnOwkfx_XA"
-    },
-    "mkt": {
-        "APIKEY": "tdunguwu"
-    },
-    "moon": {
-        "APIKEY": "tdunguwu"
-    },
-    "cardinfo": {
-        "APIKEY": "tuandz"
-    },
-    "help3": {
-        "autoUnsend": true,
-        "delayUnsend": 300
-    },
-    "job": {
-        "cooldownTime": 5000
-    },
-    "fish": {
-        "cooldownTime": 1000000
-    },
-    "sing2": {
-        "YOUTUBE_API": "AIzaSyBPdGN3eMhswfSKWoaomzdlEftf3NjV1gM",
-        "SOUNDCLOUD_API": "M4TSyS6eV0AcMynXkA3qQASGcOFQTWub"
-    },
-    "god": {
-        "enable": true
-    },
-    "help2": {
-        "autoUnsend": true,
-        "delayUnsend": 300
-    },
-    "helpall": {
-        "autoUnsend": true,
-        "delayUnsend": 20
-    },
-    "vip": {
-        "cooldownTime": 1200000
-    }
-    }
+    "threadBanned": false,
+    "userBanned": false,
+    "needRoleToUseCmd": false,
+    "needRoleToUseCmdOnReply": false,
+    "needRoleToUseCmdOnReaction": false
+  },
+  "logEvents": {
+    "disableAll": false,
+    "message": true,
+    "message_reaction": true,
+    "message_unsend": true,
+    "message_reply": true,
+    "event": true,
+    "read_receipt": false,
+    "typ": false,
+    "presence": false
+  },
+  "optionsFca": {
+    "forceLogin": true,
+    "listenEvents": true,
+    "updatePresence": true,
+    "listenTyping": true,
+    "logLevel": "error",
+    "selfListen": false,
+    "selfListenEvent": true,
+    "autoMarkDelivery": false,
+    "autoReconnect": false,
+    "notes": "Document here: https://github.com/ntkhang03/fb-chat-api/blob/master/DOCS.md#apisetoptionsoptions "
+  }
+}
