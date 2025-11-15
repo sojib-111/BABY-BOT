@@ -2,42 +2,81 @@ const axios = require("axios");
 const fs = require("fs");
 const path = require("path");
 
+const statusFile = path.join(__dirname, "emojiVoice_status.json");
+
 module.exports = {
   config: {
-    name: "voice",
-    aliases: ["aniaudio"],
-    author: "Kshitiz",
-    version: "1.0",
-    cooldowns: 5,
+    name: "ae",
+    aliases: ["emojiVoice"],
+    version: "3.0",
+    author: "TAREK",
+    countDown: 0,
     role: 0,
-    shortDescription: "Get anime voice",
-    longDescription: "Get anime voice based on animeName",
-    category: "anime",
-    guide: "{p}anivoice animeName",
+    shortDescription: { en: "Emoji to voice" },
+    longDescription: { en: "Sends a specific voice from Google Drive when a certain emoji is sent" },
+    category: "fun",
+    guide: { en: "{p}ae on/off" }
   },
 
-  onStart: async function ({ api, event, args, message }) {
-    api.setMessageReaction("🕐", event.messageID, (err) => {}, true);
-    const categories = ["jjk", "naruto", "ds", "aot", "bleach", "onepiece"];
-
-    if (args.length !== 1 || !categories.includes(args[0].toLowerCase())) {
-      return message.reply(`Please specify a valid category. Available categories: ${categories.join(", ")}`);
+  onStart: async function ({ args, message }) {
+    if (!fs.existsSync(statusFile)) {
+      fs.writeFileSync(statusFile, JSON.stringify({ enabled: true }, null, 2));
     }
 
-    try {
-      const category = args[0].toLowerCase();
-      const response = await axios.get(`https://anivoice-bjfl.onrender.com/kshitiz/${category}`, { responseType: "arraybuffer" });
+    let status = JSON.parse(fs.readFileSync(statusFile));
 
-      const tempVoicePath = path.join(__dirname, "cache", `${Date.now()}.mp3`);
-      fs.writeFileSync(tempVoicePath, Buffer.from(response.data, 'binary'));
+    if (args[0] === "on") {
+      status.enabled = true;
+      fs.writeFileSync(statusFile, JSON.stringify(status, null, 2));
+      return message.reply("✅ Emoji voice system is now ON");
+    }
 
-      const stream = fs.createReadStream(tempVoicePath);
-      message.reply({ attachment: stream });
+    if (args[0] === "off") {
+      status.enabled = false;
+      fs.writeFileSync(statusFile, JSON.stringify(status, null, 2));
+      return message.reply("❌ Emoji voice system is now OFF");
+    }
 
-      api.setMessageReaction("✅", event.messageID, (err) => {}, true);
-    } catch (error) {
-      console.error(error);
-      message.reply("Sorry, an error occurred while processing your request.");
+    return message.reply(`Emoji voice is currently ${status.enabled ? "✅ ON" : "❌ OFF"}`);
+  },
+
+  onChat: async function ({ event, api }) {
+    if (!fs.existsSync(statusFile)) return;
+    let status = JSON.parse(fs.readFileSync(statusFile));
+    if (!status.enabled) return;
+
+    const emojiVoices = {
+      "🙂": "https://drive.google.com/uc?export=download&id=1rqzq0wCrwZOJPvrP3dv2pVq8-R0w1n5s",
+      "🐸": "https://drive.google.com/uc?export=download&id=1sBDdRbD14TbbLVPwwt0C4u8Stcf_i6Tb",
+      "😹|🤣|😂|😁": "https://drive.google.com/uc?export=download&id=1sKJ3t174OJyfUljG0NrEUSsInFagiRg-",
+      "😦|😧|😮|😯|😟": "https://drive.google.com/uc?export=download&id=1s6-UQ1RDKJ_JCfbBspAl0QHx_zyzDNzP",
+      "😒": "https://drive.google.com/uc?export=download&id=1sYsJyfwKNgfGucM-Srvg0wby0J3Ft8xo"
+    };
+
+    if (!event.body) return;
+    const message = event.body.trim();
+
+    for (let key in emojiVoices) {
+      const emojis = key.split("|");
+      if (emojis.includes(message)) {
+        const voiceUrl = emojiVoices[key];
+        const filePath = path.join(__dirname, "emojiVoice.mp3");
+
+        try {
+          const response = await axios.get(voiceUrl, { responseType: "arraybuffer" });
+          fs.writeFileSync(filePath, Buffer.from(response.data, "binary"));
+
+          api.sendMessage(
+            { attachment: fs.createReadStream(filePath) },
+            event.threadID,
+            () => fs.unlinkSync(filePath),
+            event.messageID
+          );
+        } catch (err) {
+          console.error(err);
+        }
+        break;
+      }
     }
   }
 };
