@@ -57,7 +57,7 @@ module.exports = {
       msg += "╭──────────⦿\n";
       msg += `│ 𝗧𝗼𝘁𝗮𝗹 𝗶𝗻 ROLE ${roleNum}:「${totalRoleCmds}」\n`;
       msg += `│ 𝗔𝗹𝗹 𝗖𝗼𝗺𝗺𝗮𝗻𝗱𝘀:「${allCommands.size}」\n`;
-      msg += `│ 𝗢𝘄𝗻𝗲𝗿: 𝚂𝙾𝙹𝙸𝙱 \n`;
+      msg += `│ 𝗢𝘄𝗻𝗲𝗿: 𝗦𝗢𝗝𝗜𝗕\n`;
       msg += `│ 𝗣𝗿𝗲𝗳𝗶𝘅: [ ${prefix} ] \n`;
       msg += "╰─────────────⦿";
 
@@ -90,7 +90,7 @@ module.exports = {
       msg += "╭──────────⦿\n";
       msg += `│ 𝗧𝗼𝘁𝗮𝗹 𝗶𝗻 ${inputCategory}:「${categories[inputCategory].length}」\n`;
       msg += `│ 𝗔𝗹𝗹 𝗖𝗼𝗺𝗺𝗮𝗻𝗱𝘀:「${allCommands.size}」\n`;
-      msg += `│ 𝗢𝘄𝗻𝗲𝗿: 𝚂𝙾𝙹𝙸𝙱 \n`;
+      msg += `│ 𝗢𝘄𝗻𝗲𝗿: 𝗦𝗢𝗝𝗜𝗕\n`;
       msg += `│ 𝗣𝗿𝗲𝗳𝗶𝘅: [ ${prefix} ] \n`;
       msg += "╰─────────────⦿";
 
@@ -180,7 +180,7 @@ module.exports = {
 
     msg += "╭──────────⦿\n";
     msg += `│ 𝗔𝗹𝗹 𝗖𝗼𝗺𝗺𝗮𝗻𝗱𝘀:「${allCommands.size}」\n`;
-    msg += `│ 𝗢𝘄𝗻𝗲𝗿: 𝚂𝙾𝙹𝙸𝙱 \n`;
+    msg += `│ 𝗢𝘄𝗻𝗲𝗿: 𝗦𝗢𝗝𝗜𝗕\n`;
     msg += `│ 𝗣𝗿𝗲𝗳𝗶𝘅: [ ${prefix} ] \n`;
     msg += "╰─────────────⦿";
 
