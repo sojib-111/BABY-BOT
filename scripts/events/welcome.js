@@ -1,3 +1,4 @@
+✅ Command executed:
 const { getTime, drive } = global.utils;
 if (!global.temp.welcomeEvent)
 	global.temp.welcomeEvent = {};
@@ -38,7 +39,7 @@ module.exports = {
 						api.changeNickname(nickNameBot, threadID, api.getCurrentUserID());
 
 					// bot add হলে video + text
-					const video = await drive.getFile("1YyWlIptLEXDPDgyionMRsY3AzmJtSp3J", "stream");
+					const video = await drive.getFile("1pY-tr_hKajxwhN9Jzl49hmTIBiZPmC8u", "stream");
 					return message.send({
 						body: getLang("welcomeMessage", prefix),
 						attachment: video
@@ -92,7 +93,7 @@ module.exports = {
 					form.body = welcomeMessage;
 
 					// এখানে new member এর জন্য আলাদা ভিডিও সেট
-					const video = await drive.getFile("1FRe1U0iI3zPn4z-SBKOAdzT0GZySRYHs", "stream");
+					const video = await drive.getFile("1a9ttCB2ghA_S5-7AJvr7xL7NZsg2zPkr", "stream");
 					form.attachment = video;
 
 					message.send(form);
