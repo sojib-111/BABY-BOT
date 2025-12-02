@@ -23,7 +23,7 @@ module.exports = {
 
     // 🛠 Convert Google Drive view link to direct download link
     const fileId = "1QQ4rcb5mnLytHKuavPxOjx0rF-YuOTaS";
-    const directURL = `https://files.catbox.moe/2lmm1a.mp4`;
+    const directURL = `https://files.catbox.moe/txdoz2.mp4`;
 
     // ⏬ Download the file temporarily
     const filePath = path.join(__dirname, "owner-video.mp4");
@@ -50,9 +50,9 @@ module.exports = {
 • 𝗣𝗿𝗲𝗳𝗶𝘅 ➝*
 
 👤 𝗢𝗪𝗡𝗘𝗥 𝗜𝗡𝗙𝗢
-• 𝗡𝗮𝗺𝗲 ➝ 💥 𝗦𝗢𝗝𝗜𝗕 💥
+• 𝗡𝗮𝗺𝗲 ➝  𝗜𝘁'𝘀 𝗦𝗢𝗝𝗜𝗕 💋
 • 𝗚𝗲𝗻𝗱𝗲𝗿 ➝ 𝗠𝗮𝗹𝗲
-• 𝗔𝗴𝗲 ➝ 17
+• 𝗔𝗴𝗲 ➝ 17+ ☠️
 • 𝗦𝘁𝗮𝘁𝘂𝘀 ➝ SINGEL✨
 • 𝗘𝗱𝘂𝗰𝗮𝘁𝗶𝗼𝗻 ➝ 𝗦𝘁𝘂𝗱𝗲𝗻𝘁
 • 𝗟𝗼𝗰𝗮𝘁𝗶𝗼𝗻 ➝ 𝗥𝗮𝗻𝗴𝗽𝘂𝗿⚡
