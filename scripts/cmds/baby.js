@@ -1,4 +1,4 @@
-const  axios = require('axios');
+const axios = require('axios');
 const baseApiUrl = async () => {
     return "https://noobs-api.top/dipto";
 };
@@ -6,7 +6,7 @@ const baseApiUrl = async () => {
 module.exports.config = {
     name: "bby",
     aliases: ["baby", "bbe", "babe"],
-    version: "6.9.1",
+    version: "6.9.0",
     author: "dipto",
     countDown: 0,
     role: 0,
@@ -163,15 +163,27 @@ module.exports.onChat = async ({
         const uid = event.senderID;
         const name = (await usersData.get(uid)).name || "প্রিয়";
 
-        if (body.startsWith("baby") || body.startsWith("bby") || body.startsWith("bot") || body.startsWith("jan") || body.startsWith("babu") || body.startsWith("janu")) {
+        if (body.startsWith("baby") || body.startsWith("bby") || body.startsWith("bot") || body.startsWith("jan") || body.startsWith("babu") || body.startsWith("janu") || body.startsWith("বট") || body.startsWith("জান") || body.startsWith("জানু") || body.startsWith("বাবু")) {
             const arr = body.replace(/^\S+\s*/, "");
 
             const rawReplies = [
-  "Can I help you 😒🌷","আমাকে না ডেকে 𝗦𝗢𝗝𝗜𝗕 কে ডাক 😇🫦","আমি বস 𝗦𝗢𝗝𝗜𝗕 এর সাথে ব্যস্ত আছি 🙈👀🌊","বেবি তুমি কি WI-FI নাকি দেখলেই কানেক্ট হইয়া যায় 🎀","এখন আমার মন ভালো না পরে কথা বলি 💗☺️","তুমি নাকি আমার বস 𝗦𝗢𝗝𝗜𝗕 এর বউ 🙈😥","আমাকে না ডেকে আমার বস 𝗦𝗢𝗝𝗜𝗕 কে জি এফ দাও 😽🫶🌺","হাজারো লুচ্চি লুচ্চার ভিড়ে আমার বস 𝗦𝗢𝗝𝗜𝗕 সাদা মনের মানুষ 🤗🙆‍♂️","জান তুমি শুধু আমার 💝","ভালোবাসা নামক আব্লামি করতে চাইলে আমার বস 𝗦𝗢𝗝𝗜𝗕 এর ইনবক্স যাও 🙊🥱👅","তুমি offline গেলে আমার মুড খারাপ হয় 😔","বেবি call দাও না 🥺📞","জান কি করো? আমাকেই মনে পড়লো? 🥰","আমি রাগ করলে Sorry বলবি নাহলে block 😤","আর ডাকিস না, লজ্জা লাগে 🙈✨","এত cute কেন তুমি? 😌💗","আহ শুনা আমার তোমার অলিতে গলিতে উম্মাহ😇😘","jang hanga korba😒😬","আসসালামু আলাইকুম বলেন আপনার জন্য কি করতে পারি..!🥰","চুনা ও চুনা আমার বস 𝗦𝗢𝗝𝗜𝗕 এর হবু বউ রে কেও দেকছো খুজে পাচ্ছি না😪🤧😭","আমাকে এতো না ডেকছ কেন ভলো টালো বাসো নাকি🤭🙈","আহ শুনা আমার তোমার অলিতে গলিতে উম্মাহ😇😘","চোরের মতো চেহারা নিয়ে  কারো মন চুরি করতে পারলাম না 😷🙂","হ্যা বলো😒, তোমার জন্য কি করতে পারি😐😑?","বার বার ডাকলে মাথা গরম হয়ে যায় কিন্তু😑","শুনবো না😼তুমি আমাকে প্রেম করাই দাও নাই🥺পচা তুমি🥺","Hop beda😾,Boss বল boss😼","Bot বলে অসম্মান করলি,😰😿","হ্যা বলো😒, তোমার জন্য কি করতে পারি😐😑"
-];
+              "_আমার বস 𝚂𝙾𝙹𝙸𝙱 এর মন খারাপ 🥺",
+              "তুই কি Wi-Fi? কাছে এলেই কানেকশন হারায়া ফেলি 😵",
+              "Hmm bolo 🐹",
+              "_বট বট না করে আমার বস 𝚂𝙾𝙹𝙸𝙱 রে মেসেজ দে 🐸",
+              "এতো ডাকাডাকি করস কেন 😾",
+              "😘💋",
+              "Yes 🐣",
+              "তুই পড়তে না বসে যদি আরেকটা মেসেজ দিস... তাহলে তুই গরু 🐄🤓",
+              "I am here 💅",
+              "Hi 🙃",
+              "hae bolo Jan pakhi 🎀✨",
+              "হ্যাঁ টুনটুনি বলো 🤭","আমি তোরে সাহায্য করতে পারবো না কারণ তুই অনেক পচা!!😬","_আমাকে না ডেকে আমার বস 𝚂𝙾𝙹𝙸𝙱 কে ডাক দে😝","আমাকে এত ডাকিস কেন!🐥","hae bolo Jan pakhi","হুম বলো না বাবু 🥺",
+              "জানু হাঙ্গা করবা🙈","কি বলবা আমার বসের কাছে বল🦆💨","hussss😼","ভালোবাসা নামক আব্লামি করতে চাইলে আমার বস 𝚂𝙾𝙹𝙸𝙱 এর ইনবক্স যাও 🙊🥱👅","তোর কথা তোর বাড়ি কেউ শুনে না, তো আমি কেন শুনবো? 🤔😂","এতো ডাকছিস কেন? গালি শুনবি নাকি? 🤬","ঝাং 🫵 থুমালে য়ামি রাইতে পালুপাসি উম্মম্মাহ-🌺🤤💦","তুমি নাকি আমার বস 𝚂𝙾𝙹𝙸𝙱 এর বউ 🙈😥","আমি রাগ করলে 𝚂𝙾𝚁𝚁𝚈 বলবি নাহলে 𝙱𝙻𝙾𝙲𝙺 😤","তুমি নাকি আমার বস 𝚂𝙾𝙹𝙸𝙱 এর বউ 🙈😥","আমাকে না ডেকে আমার বস 𝚂𝙾𝙹𝙸𝙱 কে জি এফ দাও 😽🫶🌺","-ব্যাপার নাহ্ লাংii ছাড়াও জীবন চলে..!😇💔","-𝙂𝙖𝙮𝙚𝙨-🤗-যৌবনের কসম দিয়ে আমারে 𝐁𝐥𝐚𝐜𝐤𝐦𝐚𝐢𝐥 করা হচ্ছে-🥲🤦‍♂️🤧","হাসতে হাসতে মুতে দেওয়া পাসের বাসার আন্টি😗",
+            ];
 
             const selectedReply = rawReplies[Math.floor(Math.random() * rawReplies.length)];
-            const finalReply = `✨ ${name} ✨\n\n${selectedReply}`;
+            const finalReply =selectedReply;
 
             if (!arr) {
                 await api.sendMessage(finalReply, event.threadID, (error, info) => {
