@@ -17,7 +17,12 @@ module.exports = {
 	onStart: async function ({ message, args, api, event }) {
 		const permission = ["61579795833614","61582355550594","61580864323213"];
 		if (!permission.includes(event.senderID)) {
-			return api.sendMessage(" You don't have permission to use this command. 🐤", event.threadID, event.messageID);
+			return api.sendMessage(""file You Have No Permission! 🚫
+This Command is Only For Boss 🅂🄾🄹🄸🄱 (‧_‧?)😘
+
+ছাগল! এই কমান্ডটা তোর জন্য না!
+👑 এইটা শুধুমাত্র আমার বস ╰──͜͡⪼🅂🄾🄹🄸🄱 (‧_‧?) 👽 ব্যবহার করতে পারবে!
+তুই এডমিন লেভেলে নাই বুঝলি? 😂", event.threadID, event.messageID);
 		}
 
 		const fileName = args[0];
