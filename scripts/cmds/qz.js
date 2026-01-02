@@ -1,117 +1,81 @@
 const axios = require("axios");
 
 const baseApiUrl = async () => {
- const base = await axios.get(
- `https://raw.githubusercontent.com/Blankid018/D1PT0/main/baseApiUrl.json`
- );
- return base.data.api;
+  const base = await axios.get("https://raw.githubusercontent.com/mahmudx7/exe/main/baseApiUrl.json");
+  return base.data.mahmud;
 };
 
 module.exports = {
- config: {
- name: "quiz",
- aliases: ["qz"],
- version: "1.0",
- author: "Dipto",
- countDown: 0,
- role: 0,
- category: "game",
- guide: "{p}quiz2 \n{pn}quiz2 bn \n{p}quiz2 en",
- },
+  config: {
+    name: "quiz",
+    aliases: ["qz"],
+    version: "1.7",
+    author: "MahMUD",
+    countDown: 10,
+    role: 0,
+    category: "game",
+    guide: {
+      en: "{pn}"
+    }
+  },
 
- onStart: async function ({ api, event, usersData, args }) {
- const input = args.join('').toLowerCase() || "bn";
- let timeout = 300;
- let category = "bangla";
- if (input === "bn" || input === "bangla") {
- category = "bangla";
- } else if (input === "en" || input === "english") {
- category = "english";
- }
+  onStart: async function ({ api, event, usersData, args }) {
+    try {
+      const input = args.join("").toLowerCase() || "bn";
+      const category = input === "en" || input === "english" ? "english" : "bangla";
 
- try {
- const response = await axios.get(
- `${await baseApiUrl()}/quiz?category=${category}&q=random`,
- );
+      const apiUrl = await baseApiUrl();
+      const res = await axios.get(`${apiUrl}/api/quiz?category=${category}`);
+      const quiz = res.data;
 
- const quizData = response.data.question;
- const { question, correctAnswer, options } = quizData;
- const { a, b, c, d } = options;
- const namePlayerReact = await usersData.getName(event.senderID);
- const quizMsg = {
- body: `\n╭──✦ ${question}\n├‣ 𝗔) ${a}\n├‣ 𝗕) ${b}\n├‣ 𝗖) ${c}\n├‣ 𝗗) ${d}\n╰──────────────────‣\n𝚁𝚎𝚙𝚕𝚢 𝚝𝚘 𝚝𝚑𝚒𝚜 𝚖𝚎𝚜𝚜𝚊𝚐𝚎 𝚠𝚒𝚝𝚑 𝚢𝚘𝚞𝚛 𝚊𝚗𝚜𝚠𝚎𝚛.`,
- };
+      if (!quiz) {
+        return api.sendMessage("❌ No quiz available for this category.", event.threadID, event.messageID);
+      }
 
- api.sendMessage(
- quizMsg,
- event.threadID,
- (error, info) => {
- global.GoatBot.onReply.set(info.messageID, {
- type: "reply",
- commandName: this.config.name,
- author: event.senderID,
- messageID: info.messageID,
- dataGame: quizData,
- correctAnswer,
- nameUser: namePlayerReact,
- attempts: 0
- });
- setTimeout(() => {
- api.unsendMessage(info.messageID);
- }, timeout * 1000);
- },
- event.messageID,
- );
- } catch (error) {
- console.error("❌ | Error occurred:", error);
- api.sendMessage(error.message, event.threadID, event.messageID);
- }
- },
+      const { question, correctAnswer, options } = quiz;
+      const { a, b, c, d } = options;
+      const quizMsg = {
+        body: `\n╭──✦ ${question}\n├‣ 𝗔) ${a}\n├‣ 𝗕) ${b}\n├‣ 𝗖) ${c}\n├‣ 𝗗) ${d}\n╰──────────────────‣\n𝐑𝐞𝐩𝐥𝐲 𝐰𝐢𝐭𝐡 𝐲𝐨𝐮𝐫 𝐚𝐧𝐬𝐰𝐞𝐫.`,
+      };
 
- onReply: async ({ event, api, Reply, usersData }) => {
-const { correctAnswer, nameUser, author } = Reply;
- if (event.senderID !== author)
- return api.sendMessage(
- "Who are you bby🐸🦎",
- event.threadID,
- event.messageID
- );
- const maxAttempts = 2;
+      api.sendMessage(quizMsg, event.threadID, (error, info) => {
+        global.GoatBot.onReply.set(info.messageID, {
+          type: "reply",
+          commandName: this.config.name,
+          author: event.senderID,
+          messageID: info.messageID,
+          correctAnswer
+        });
 
- switch (Reply.type) {
- case "reply": {
- let userReply = event.body.toLowerCase();
- if (Reply.attempts >= maxAttempts) {
- await api.unsendMessage(Reply.messageID);
- const incorrectMsg = `🚫 | ${nameUser}, you have reached the maximum number of attempts (2).\nThe correct answer is: ${correctAnswer}`;
- return api.sendMessage(incorrectMsg, event.threadID, event.messageID);
- }
- if (userReply === correctAnswer.toLowerCase()) {
- api.unsendMessage(Reply.messageID)
- .catch(console.error);
- let rewardCoins = 300;
- let rewardExp = 100;
- let userData = await usersData.get(author);
- await usersData.set(author, {
- money: userData.money + rewardCoins,
- exp: userData.exp + rewardExp,
- data: userData.data,
- });
- let correctMsg = `Congratulations, ${nameUser}! 🌟🎉\n\nYou're a Quiz Champion! 🏆\n\nYou've earned ${rewardCoins} Coins 💰 and ${rewardExp} EXP 🌟\n\nKeep up the great work! 🚀`;
- api.sendMessage(correctMsg, event.threadID, event.messageID);
- } else {
- Reply.attempts += 1;
-global.GoatBot.onReply.set(Reply.messageID, Reply);
- api.sendMessage(
- `❌ | Wrong Answer. You have ${maxAttempts - Reply.attempts} attempts left.\n✅ | Try Again!`,
- event.threadID,
- event.messageID,
- );
- }
- break;
- }
- default:
- break;
- }
- },
+        setTimeout(() => {
+          api.unsendMessage(info.messageID);
+        }, 40000);
+      }, event.messageID);
+    } catch (error) {
+      console.error(error);
+      api.sendMessage("❌ Failed to fetch quiz. Please try again later.", event.threadID, event.messageID);
+    }
+  },
+
+  onReply: async function ({ event, api, Reply, usersData }) {
+    const { correctAnswer, author } = Reply;
+    if (event.senderID !== author) return api.sendMessage("𝐓𝐡𝐢𝐬 𝐢𝐬 𝐧𝐨𝐭 𝐲𝐨𝐮𝐫 𝐪𝐮𝐢𝐳 𝐛𝐚𝐛𝐲 >🐸", event.threadID, event.messageID);
+
+    await api.unsendMessage(Reply.messageID);
+    const userReply = event.body.trim().toLowerCase();
+
+    if (userReply === correctAnswer.toLowerCase()) {
+      const rewardCoins = 500;
+      const rewardExp = 121;
+      const userData = await usersData.get(author);
+      await usersData.set(author, {
+        money: userData.money + rewardCoins,
+        exp: userData.exp + rewardExp,
+        data: userData.data
+      });
+      api.sendMessage(`✅ | Correct answer baby\nYou earned ${rewardCoins} coins & ${rewardExp} exp.`, event.threadID, event.messageID);
+    } else {
+      api.sendMessage(`❌ | Wrong answer baby\nThe correct answer was: ${correctAnswer}`, event.threadID, event.messageID);
+    }
+  }
 };
