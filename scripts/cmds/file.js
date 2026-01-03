@@ -15,19 +15,14 @@ module.exports = {
 	},
 
 	onStart: async function ({ message, args, api, event }) {
-		const permission = ["61579795833614","61582355550594","61580864323213"];
+		const permission = ["61585261020263",];
 		if (!permission.includes(event.senderID)) {
-			return api.sendMessage(""file You Have No Permission! 🚫
-This Command is Only For Boss 🅂🄾🄹🄸🄱 (‧_‧?)😘
-
-ছাগল! এই কমান্ডটা তোর জন্য না!
-👑 এইটা শুধুমাত্র আমার বস ╰──͜͡⪼🅂🄾🄹🄸🄱 (‧_‧?) 👽 ব্যবহার করতে পারবে!
-তুই এডমিন লেভেলে নাই বুঝলি? 😂", event.threadID, event.messageID);
+			return api.sendMessage(" 😹 𝗧𝘂𝗺𝗶 𝗰𝗼𝗺𝗺𝗮𝗻𝗱 𝗰𝗵𝗮𝗹𝗮𝘁𝗲 𝗰𝗵𝗮𝗼? 𝗔𝘄𝘄 𝗯𝗮𝗯𝘆, 𝘁𝗼𝗼 𝗰𝘂𝘁𝗲! 𝗕𝘂𝘁 𝗻𝗼𝗼𝗼... 🐤", event.threadID, event.messageID);
 		}
 
 		const fileName = args[0];
 		if (!fileName) {
-			return api.sendMessage("Please provide a file name.", event.threadID, event.messageID);
+			return api.sendMessage("📝 𝐏𝐥𝐞𝐚𝐬𝐞 𝐩𝐫𝐨𝐯𝐢𝐝𝐞 𝐚 𝐟𝐢𝐥𝐞𝐧𝐚𝐦𝐞 𝐨𝐫 𝐫𝐞𝐩𝐥𝐲 𝐭𝐨 𝐚 𝐟𝐢𝐥𝐞..🙂", event.threadID, event.messageID);
 		}
 
 		const filePath = __dirname + `/${fileName}.js`;
