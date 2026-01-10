@@ -1,58 +1,76 @@
+const fs = require("fs");
+const path = require("path");
+const axios = require("axios");
+
 module.exports = {
   config: {
     name: "edit",
-    aliases: ["e", "aiedit"],
-    version: "1.6.9",
-    author: "Nazrul",
+    aliases: ["e"],
+    author: "SO JI B",
+    version: "4.3",
+    cooldowns: 5,
     role: 0,
-    description: "Edit image by URL or reply with model selection",
-    category: "ai",
-    usePrefix: true,
-    isPremium: true,
-    countDown: 10,
-    guide: {
-      en: "{pn} [url] [prompt] [model]\nModels: 1=nano 2=4o 3=flash 4=qwen 5=flux"
-    }
+    category: "image"
   },
 
-  onStart: async ({ message, event, args }) => {
-    const models = [
-      { n: "1", name: "nano-banana", s: "nano", as: ["nano", "nano-banana"] },
-      { n: "2", name: "4o-image", s: "4o", as: ["4o", "4o-image", "gpt"] },
-      { n: "3", name: "gemini-flash-edit", s: "flash", as: ["flash", "gemini", "gemini-flash-edit"] },
-      { n: "4", name: "qwen-image-edit", s: "qwen", as: ["qwen", "qwen-image-edit"] },
-      { n: "5", name: "flux-dev", s: "flux", as: ["flux", "flux-dev"] }
-    ];
+  onStart: async function ({ message, args, api, event }) {
 
-    let imgUrl = event.messageReply?.attachments?.[0]?.type === "photo" ? event.messageReply.attachments[0].url : args[0];
-    let l = (args.slice(-1)[0] || "").replace(/^--/, "").toLowerCase();
-    let model = models.find(m => m.n === l || m.name === l || m.as.includes(l));
-    let mt = model ? l : null;
-    let prompt = args.slice(event.messageReply?.attachments?.[0]?.type === "photo" ? 0 : 1, model ? -1 : undefined).join(" ");
-    model = model || models[2];
-    let { n: mn, s: ms } = model;
+    let imageUrl, prompt;
 
-    if (!imgUrl) return message.reply("• Reply to an image or provide image URL!\n• Add prompt and model (-- nano/4o/qwen/flash/flux)");
+    if (event.messageReply && event.messageReply.attachments.length > 0) {
+      imageUrl = event.messageReply.attachments[0].url;
+      prompt = args.join(" ");
+    } else if (args.length >= 2) {
+      imageUrl = args[0];
+      prompt = args.slice(1).join(" ");
+    } else {
+      return api.sendMessage("𝐌𝐢𝐬𝐬𝐢𝐧𝐠 𝐢𝐦𝐚𝐠𝐞 𝐨𝐫 𝐩𝐫𝐨𝐦𝐩𝐭.", event.threadID);
+    }
 
-    message.reaction('⏳', event.messageID);
-    const wm = await message.reply(`⏳ Editing your image with Model ${ms} ...!`);
+    if (!prompt) return api.sendMessage("𝐏𝐫𝐨𝐦𝐩𝐭 𝐦𝐢𝐬𝐬𝐢𝐧𝐠.", event.threadID);
+
+    const waitMsg = await api.sendMessage("𝐘𝐨𝐮𝐫 𝐫𝐞𝐪𝐮𝐞𝐬𝐭 𝐢𝐬 𝐩𝐫𝐨𝐜𝐞𝐬𝐬𝐢𝐧𝐠 𝐩𝐥𝐞𝐚𝐬𝐞 𝐰𝐚𝐢𝐭.....!!", event.threadID);
 
     try {
-      const apiUrl = (await require("axios").get("https://raw.githubusercontent.com/nazrul4x/Noobs/main/Apis.json")).data.m;
-      const res = await require("axios").get(`${apiUrl}/nazrul/edit?imgUrl=${encodeURIComponent(imgUrl)}&prompt=${encodeURIComponent(prompt)}&model=${mn}`);
-      const u = res.data?.data?.imageResponseVo?.urls?.[0];
+      const githubJson = "https://raw.githubusercontent.com/Arafat-Core/cmds/refs/heads/main/api.json";
+      const { data } = await axios.get(githubJson);
 
-      message.reaction('✅', event.messageID);
-      await message.unsend(wm.messageID);
+      if (!data || !data.api)
+        return api.sendMessage("𝐀𝐏𝐈 𝐥𝐨𝐚𝐝 𝐞𝐫𝐫𝐨𝐫.", event.threadID);
 
-      if (u) {
-        const i = await require("axios").get(u, { responseType: "stream" });
-        return message.reply({ body: `✅ Here's your Edited image!\n• (Model: ${ms})`, attachment: i.data });
-      } 
-      return message.reply("• Not found any result!");
-    } catch {
-      message.reaction('❌', event.messageID);
-      await message.unsend(wm.messageID);
+      const API_URL = `${data.api}/arafatedit`;
+
+      const response = await axios.post(API_URL, {
+        prompt: prompt,
+        image_urls: [imageUrl],
+        font: "Poppins"
+      });
+
+      if (!response.data || !response.data.image_url)
+        return api.sendMessage("𝐄𝐝𝐢𝐭 𝐟𝐚𝐢𝐥𝐞𝐝.", event.threadID);
+
+      const editedUrl = response.data.image_url;
+
+      const fileBuffer = await axios.get(editedUrl, { responseType: "arraybuffer" });
+
+      const cache = path.join(__dirname, "cache");
+      if (!fs.existsSync(cache)) fs.mkdirSync(cache);
+
+      const filePath = path.join(cache, `${Date.now()}_edited.png`);
+      fs.writeFileSync(filePath, fileBuffer.data);
+
+      api.unsendMessage(waitMsg.messageID);
+
+      message.reply(
+        {
+          body: `𝐃𝐨𝐧𝐞 ✅\n𝐏𝐫𝐨𝐦𝐩𝐭: "${prompt}"`,
+          attachment: fs.createReadStream(filePath)
+        },
+        () => fs.unlinkSync(filePath)
+      );
+
+    } catch (err) {
+      api.sendMessage("𝐄𝐫𝐫𝐨𝐫: " + err.message, event.threadID);
     }
   }
 };
