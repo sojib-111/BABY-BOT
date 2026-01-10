@@ -1,106 +1,100 @@
+const axios = require("axios");
+const fs = require("fs");
+const path = require("path");
+const FormData = require("form-data");
+
 module.exports = {
   config: {
-    name: "enhance",
-    aliases: ["4k", "enhance4k"],
-    version: "6.0",
-    author: "AyanHost",
+    name: "4k",
+    version: "1.5",
+    author: "SOJIB ISLAM",
     role: 0,
-    shortDescription: "Enhance uploaded image to 4K-like + stylish presets + countdown delete (Node.js 16 compatible)",
     category: "image",
-    guide: ".enhance [preset]\nPresets: cinematic, anime, nature, soft-glow\nReply to an image or upload one."
+    shortDescription: { en: "Enhance image to 4K" },
+    longDescription: { en: "Reply to an image to get a 4K enhanced version" },
+    guide: { en: "Reply to an image with: 4k" }
   },
 
-  onStart: async function({ api, event, args }) {
-    const fs = require("fs-extra");
-    const path = require("path");
-    const Jimp = require("jimp");
-    const axios = require("axios");
-
-    const { threadID, messageReply } = event;
-    const __root = path.resolve(__dirname, "cache", "enhance");
-    if (!fs.existsSync(__root)) fs.mkdirSync(__root, { recursive: true });
-
-    // Step 1: Detect preset
-    const presets = ["cinematic", "anime", "nature", "soft-glow"];
-    let preset = "default";
-    if (args.length > 0 && presets.includes(args[0].toLowerCase())) {
-      preset = args[0].toLowerCase();
-    }
-
-    // Step 2: Detect uploaded/reply image
-    if (!messageReply || !messageReply.attachments || messageReply.attachments.length === 0) {
-      return api.sendMessage("⚠️ Please reply to an image or upload one!", threadID);
-    }
-
-    const imageURL = messageReply.attachments[0].url;
-
-    // Step 3: Send fancy message
-    const sentMsg = await api.sendMessage(`✨ Enhancing your image with preset: ${preset} ... ✨`, threadID);
-
-    // Step 4: Download image
-    const fileExt = ".jpg";
-    const inputPath = path.join(__root, `input_${Date.now()}${fileExt}`);
-    const outputPath = path.join(__root, `enhanced_${Date.now()}.jpg`);
+  onStart: async function ({ event, message }) {
+    const startTime = Date.now();
 
     try {
-      const response = await axios.get(imageURL, { responseType: "arraybuffer" });
-      fs.writeFileSync(inputPath, Buffer.from(response.data));
-
-      // Step 5: Load image with Jimp
-      let image = await Jimp.read(inputPath);
-
-      // Step 6: Resize to 4K-like (approximation)
-      image = image.resize(3840, Jimp.AUTO);
-
-      // Step 7: Apply preset filters
-      switch (preset) {
-        case "cinematic":
-          image = image.color([{ apply: "mix", params: ["#ffccaa", 20] }]).brightness(0.1).contrast(0.1);
-          break;
-        case "anime":
-          image = image.color([{ apply: "saturate", params: [40] }]).brightness(0.15);
-          break;
-        case "nature":
-          image = image.color([{ apply: "saturate", params: [30] }]).brightness(0.05);
-          break;
-        case "soft-glow":
-          image = image.blur(2).brightness(0.1).contrast(0.05);
-          break;
-        default:
-          image = image.brightness(0.1).contrast(0.1);
+      if (
+        !event.messageReply ||
+        !event.messageReply.attachments ||
+        event.messageReply.attachments[0].type !== "photo"
+      ) {
+        return message.reply(
+          "❌ Please reply to an image and type: 4k"
+        );
       }
 
-      // Step 8: Save enhanced image
-      await image.writeAsync(outputPath);
+      const imageUrl = event.messageReply.attachments[0].url;
 
-      // Step 9: Send enhanced image
-      await api.sendMessage({
-        body: `✨ Your enhanced image is ready! Preset applied: ${preset}`,
-        attachment: fs.createReadStream(outputPath)
-      }, threadID);
+      const cacheDir = path.join(__dirname, "..", "..", "cache");
+      if (!fs.existsSync(cacheDir)) fs.mkdirSync(cacheDir);
 
-      // Step 10: Countdown animation + delete fancy message
-      setTimeout(async () => {
-        const countdownMsg = await api.sendMessage("🔥 Deleting fancy message in 3...", threadID);
-        setTimeout(() => api.editMessage("⚡ Deleting fancy message in 2...", countdownMsg.messageID), 1000);
-        setTimeout(() => api.editMessage("💫 Deleting fancy message in 1...", countdownMsg.messageID), 2000);
-        setTimeout(() => {
-          api.unsendMessage(sentMsg.messageID);
-          api.unsendMessage(countdownMsg.messageID);
-        }, 3000);
-      }, 1000);
+      const imgPath = path.join(
+        cacheDir,
+        `4k_${Date.now()}.jpg`
+      );
+
+      const imgRes = await axios.get(imageUrl, {
+        responseType: "stream",
+        timeout: 20000
+      });
+
+      await new Promise((resolve, reject) => {
+        const writer = fs.createWriteStream(imgPath);
+        imgRes.data.pipe(writer);
+        writer.on("finish", resolve);
+        writer.on("error", reject);
+      });
+
+      const { data } = await axios.get(
+        "https://raw.githubusercontent.com/Arafat-Core/Arafat-Temp/refs/heads/main/4k.json",
+        { timeout: 10000 }
+      );
+
+      const API_BASE = data.api;
+
+      const form = new FormData();
+      form.append("image", fs.createReadStream(imgPath));
+
+      const apiRes = await axios.post(
+        `${API_BASE}/Arafat-4k`,
+        form,
+        {
+          headers: form.getHeaders(),
+          timeout: 60000
+        }
+      );
+
+      if (fs.existsSync(imgPath)) fs.unlinkSync(imgPath);
+
+      if (!apiRes.data || !apiRes.data.photo_4k_url) {
+        return message.reply("❌ Failed to generate 4K image");
+      }
+
+      const timeTaken = ((Date.now() - startTime) / 1000).toFixed(2);
+
+      return message.reply({
+        body:
+          "✨ 𝟒𝐊 𝐈𝐦𝐚𝐠𝐞 𝐆𝐞𝐧𝐞𝐫𝐚𝐭𝐞𝐝\n" +
+          `🚀 𝐓𝐢𝐦𝐞 : ${timeTaken}s`,
+        attachment: await axios
+          .get(apiRes.data.photo_4k_url, {
+            responseType: "stream",
+            timeout: 30000
+          })
+          .then(r => r.data)
+      });
 
     } catch (err) {
-      console.error("Enhance error:", err);
-      await api.sendMessage("⚠️ Failed to enhance image!", threadID);
-    }
-
-    // Step 11: Clean cache
-    try {
-      const files = await fs.readdir(__root);
-      for (const file of files) fs.unlinkSync(path.join(__root, file));
-    } catch (err) {
-      console.error("Cache clear error:", err.message);
+      console.error(err);
+      return message.reply(
+        "❌ Server error. Please try again later."
+      );
     }
   }
 };
